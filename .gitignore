@@ -1,0 +1,11 @@
+*.dcu
+*.~*
+*.identcache
+*.local
+*.tvsconfig
+__history/
+Win32/
+Win64/
+Debug/
+Release/
+*.exe
