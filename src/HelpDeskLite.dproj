@@ -124,7 +124,38 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="uFrmPrincipal.pas">
-            <Form>Form1</Form>
+            <Form>frmPrincipal</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Data\uDMConexao.pas">
+            <Form>dmConexao</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Data\uDMCliente.pas">
+            <Form>dmCliente</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Forms\uFrmClientes.pas">
+            <Form>frmClientes</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Forms\uFrmClienteCadastro.pas">
+            <Form>frmClienteCadastro</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Data\uDMChamado.pas">
+            <Form>dmChamado</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Forms\uFrmChamados.pas">
+            <Form>frmChamados</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Forms\uFrmChamadoCadastro.pas">
+            <Form>frmChamadoCadastro</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Base">
