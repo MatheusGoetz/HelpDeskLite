@@ -9,7 +9,9 @@ uses
   uFrmClienteCadastro in 'Forms\uFrmClienteCadastro.pas' {frmClienteCadastro},
   uDMChamado in 'Data\uDMChamado.pas' {dmChamado: TDataModule},
   uFrmChamados in 'Forms\uFrmChamados.pas' {frmChamados},
-  uFrmChamadoCadastro in 'Forms\uFrmChamadoCadastro.pas' {frmChamadoCadastro};
+  uFrmChamadoCadastro in 'Forms\uFrmChamadoCadastro.pas' {frmChamadoCadastro},
+  uDMItemChamado in 'Data\uDMItemChamado.pas' {dmItemChamado: TDataModule},
+  uFrmItensChamado in 'Forms\uFrmItensChamado.pas' {frmItensChamado};
 
 {$R *.res}
 
@@ -25,5 +27,7 @@ begin
   Application.CreateForm(TdmChamado, dmChamado);
   Application.CreateForm(TfrmChamados, frmChamados);
   Application.CreateForm(TfrmChamadoCadastro, frmChamadoCadastro);
+  Application.CreateForm(TdmItemChamado, dmItemChamado);
+  Application.CreateForm(TfrmItensChamado, frmItensChamado);
   Application.Run;
 end.

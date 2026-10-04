@@ -158,6 +158,15 @@
             <Form>frmChamadoCadastro</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Data\uDMItemChamado.pas">
+            <Form>dmItemChamado</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Forms\uFrmItensChamado.pas">
+            <Form>frmItensChamado</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

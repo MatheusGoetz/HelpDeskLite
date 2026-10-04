@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Data.DB,
-  Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro;
+  Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro, uFrmItensChamado;
 
 type
   TfrmChamados = class(TForm)
@@ -15,9 +15,12 @@ type
     btnExcluir: TButton;
     btnAtualizar: TButton;
     dbgChamados: TDBGrid;
+    pnlDown: TPanel;
+    btnItens: TButton;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
+    procedure btnItensClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -167,6 +170,33 @@ begin
         E.Message
       );
   end;
+end;
+
+procedure TfrmChamados.btnItensClick(Sender: TObject);
+var
+  IdChamado: Integer;
+begin
+  if dmChamado.qryChamados.IsEmpty then
+  begin
+    ShowMessage('Selecione um chamado.');
+    Exit;
+  end;
+
+  IdChamado :=
+    dmChamado.qryChamados.FieldByName('ID').AsInteger;
+
+  frmItensChamado :=
+    TfrmItensChamado.Create(Self);
+
+  try
+    frmItensChamado.AbrirChamado(IdChamado);
+    frmItensChamado.ShowModal;
+  finally
+    frmItensChamado.Free;
+  end;
+
+  dmChamado.qryChamados.Close;
+  dmChamado.qryChamados.Open;
 end;
 
 procedure TfrmChamados.btnNovoClick(Sender: TObject);

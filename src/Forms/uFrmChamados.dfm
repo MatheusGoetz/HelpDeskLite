@@ -19,6 +19,7 @@ object frmChamados: TfrmChamados
     Height = 50
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 513
     object btnNovo: TButton
       Left = 40
       Top = 13
@@ -59,7 +60,7 @@ object frmChamados: TfrmChamados
     Left = 0
     Top = 50
     Width = 1084
-    Height = 511
+    Height = 470
     Align = alClient
     DataSource = dmChamado.dsChamados
     TabOrder = 1
@@ -68,5 +69,25 @@ object frmChamados: TfrmChamados
     TitleFont.Height = -12
     TitleFont.Name = 'Segoe UI'
     TitleFont.Style = []
+  end
+  object pnlDown: TPanel
+    Left = 0
+    Top = 520
+    Width = 1084
+    Height = 41
+    Align = alBottom
+    TabOrder = 2
+    ExplicitLeft = 456
+    ExplicitTop = 280
+    ExplicitWidth = 185
+    object btnItens: TButton
+      Left = 40
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = 'Itens'
+      TabOrder = 0
+      OnClick = btnItensClick
+    end
   end
 end
