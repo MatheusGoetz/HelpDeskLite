@@ -23,9 +23,13 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnSalvarClick(Sender: TObject);
   private
+  FIdChamado: Integer;
+
   procedure CarregarClientes;
+  procedure SelecionarCliente(AClienteId: Integer);
   public
-    { Public declarations }
+    procedure NovoChamado;
+    procedure EditarChamado(AIdChamado: Integer);
   end;
 
 var
@@ -34,6 +38,90 @@ var
 implementation
 
 {$R *.dfm}
+procedure TfrmChamadoCadastro.NovoChamado;
+begin
+  FIdChamado := 0;
+
+  Caption := 'Novo Chamado';
+
+  CarregarClientes;
+
+  cmbStatus.ItemIndex := cmbStatus.Items.IndexOf('ABERTO');
+
+  if cmbCliente.Items.Count > 0 then
+    cmbCliente.ItemIndex := 0;
+
+  memDescricao.Clear;
+
+  dtpDataPrevista.Date := Date;
+
+  cmbStatus.ItemIndex := 0;
+
+  edtValorTotal.Text := '0';
+end;
+
+procedure TfrmChamadoCadastro.SelecionarCliente(AClienteId: Integer);
+var
+  I: Integer;
+begin
+  cmbCliente.ItemIndex := -1;
+
+  for I := 0 to cmbCliente.Items.Count - 1 do
+  begin
+    if Integer(cmbCliente.Items.Objects[I]) = AClienteId then
+    begin
+      cmbCliente.ItemIndex := I;
+      Break;
+    end;
+  end;
+end;
+
+procedure TfrmChamadoCadastro.EditarChamado(AIdChamado: Integer);
+begin
+  FIdChamado := AIdChamado;
+
+  Caption := 'Editar Chamado';
+
+  CarregarClientes;
+
+  with dmChamado.qryChamado do
+  begin
+    Close;
+
+    ParamByName('ID').AsInteger := AIdChamado;
+
+    Open;
+
+    if IsEmpty then
+    begin
+      ShowMessage('Chamado não encontrado.');
+      Exit;
+    end;
+
+    SelecionarCliente(
+      FieldByName('CLIENTE_ID').AsInteger
+    );
+
+    memDescricao.Text :=
+      FieldByName('DESCRICAO').AsString;
+
+    if not FieldByName('DATA_PREVISTA').IsNull then
+      dtpDataPrevista.Date :=
+        FieldByName('DATA_PREVISTA').AsDateTime;
+
+    cmbStatus.ItemIndex :=
+      cmbStatus.Items.IndexOf(
+        FieldByName('STATUS').AsString
+      );
+
+    edtValorTotal.Text :=
+      FormatFloat(
+        '0.00',
+        FieldByName('VALOR_TOTAL').AsFloat
+      );
+  end;
+end;
+
 procedure TfrmChamadoCadastro.btnSalvarClick(Sender: TObject);
 var
   IdCliente: Integer;
@@ -61,7 +149,7 @@ begin
   end;
 
   IdCliente :=
-    Integer(cmbCliente.Items.Objects[cmbCliente.ItemIndex]);
+    NativeInt(cmbCliente.Items.Objects[cmbCliente.ItemIndex]);
 
   ValorTotal :=
     StrToFloatDef(edtValorTotal.Text, 0);
@@ -70,34 +158,74 @@ begin
     with dmChamado.qryChamadoCRUD do
     begin
       Close;
+      SQL.Clear;
 
-      SQL.Text :=
-        'INSERT INTO CHAMADO ' +
-        '(CLIENTE_ID, DATA_ABERTURA, DATA_PREVISTA, ' +
-        'DESCRICAO, STATUS, VALOR_TOTAL) ' +
-        'VALUES ' +
-        '(:CLIENTE_ID, CURRENT_TIMESTAMP, :DATA_PREVISTA, ' +
-        ':DESCRICAO, :STATUS, :VALOR_TOTAL)';
+      if FIdChamado = 0 then
+      begin
+        { NOVO CHAMADO }
 
-      ParamByName('CLIENTE_ID').AsInteger :=
-        IdCliente;
+        SQL.Text :=
+          'INSERT INTO CHAMADO ' +
+          '(CLIENTE_ID, DATA_ABERTURA, DATA_PREVISTA, ' +
+          'DESCRICAO, STATUS, VALOR_TOTAL) ' +
+          'VALUES ' +
+          '(:CLIENTE_ID, CURRENT_TIMESTAMP, :DATA_PREVISTA, ' +
+          ':DESCRICAO, :STATUS, :VALOR_TOTAL)';
 
-      ParamByName('DATA_PREVISTA').AsDate :=
-        dtpDataPrevista.Date;
+        ParamByName('CLIENTE_ID').AsInteger :=
+          IdCliente;
 
-      ParamByName('DESCRICAO').AsString :=
-        Trim(memDescricao.Text);
+        ParamByName('DATA_PREVISTA').AsDateTime :=
+          dtpDataPrevista.Date;
 
-      ParamByName('STATUS').AsString :=
-        cmbStatus.Text;
+        ParamByName('DESCRICAO').AsString :=
+          Trim(memDescricao.Text);
 
-      ParamByName('VALOR_TOTAL').AsFloat :=
-        ValorTotal;
+        ParamByName('STATUS').AsString :=
+          cmbStatus.Text;
+
+        ParamByName('VALOR_TOTAL').AsFloat :=
+          ValorTotal;
+      end
+      else
+      begin
+        { EDITAR CHAMADO }
+
+        SQL.Text :=
+          'UPDATE CHAMADO SET ' +
+          'CLIENTE_ID = :CLIENTE_ID, ' +
+          'DATA_PREVISTA = :DATA_PREVISTA, ' +
+          'DESCRICAO = :DESCRICAO, ' +
+          'STATUS = :STATUS, ' +
+          'VALOR_TOTAL = :VALOR_TOTAL ' +
+          'WHERE ID = :ID';
+
+        ParamByName('CLIENTE_ID').AsInteger :=
+          IdCliente;
+
+        ParamByName('DATA_PREVISTA').AsDateTime :=
+          dtpDataPrevista.Date;
+
+        ParamByName('DESCRICAO').AsString :=
+          Trim(memDescricao.Text);
+
+        ParamByName('STATUS').AsString :=
+          cmbStatus.Text;
+
+        ParamByName('VALOR_TOTAL').AsFloat :=
+          ValorTotal;
+
+        ParamByName('ID').AsInteger :=
+          FIdChamado;
+      end;
 
       ExecSQL;
     end;
 
-    ShowMessage('Chamado criado com sucesso.');
+    if FIdChamado = 0 then
+      ShowMessage('Chamado criado com sucesso.')
+    else
+      ShowMessage('Chamado atualizado com sucesso.');
 
     ModalResult := mrOk;
 
@@ -105,7 +233,8 @@ begin
     on E: Exception do
       ShowMessage(
         'Não foi possível salvar o chamado.' +
-        sLineBreak + sLineBreak +
+        sLineBreak +
+        sLineBreak +
         E.Message
       );
   end;
@@ -138,13 +267,8 @@ end;
 
 procedure TfrmChamadoCadastro.FormShow(Sender: TObject);
 begin
-  CarregarClientes;
-
-  if cmbCliente.Items.Count > 0 then
-    cmbCliente.ItemIndex := 0;
-
-  if cmbStatus.Items.Count > 0 then
-    cmbStatus.ItemIndex := 0;
+  if cmbCliente.Items.Count = 0 then
+    CarregarClientes;
 end;
 
 end.

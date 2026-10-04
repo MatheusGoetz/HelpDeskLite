@@ -84,10 +84,9 @@ object frmChamadoCadastro: TfrmChamadoCadastro
     TabOrder = 3
     Items.Strings = (
       'ABERTO'
-      'EM ANDAMENTO'
-      'AGUARDANDO CLIENTE'
-      'RESOLVIDO'
-      'FECHADO')
+      'EM_ANDAMENTO'
+      'CONCLUIDO'
+      'CANCELADO')
   end
   object edtValorTotal: TEdit
     Left = 166

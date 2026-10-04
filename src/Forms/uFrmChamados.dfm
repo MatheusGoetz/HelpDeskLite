@@ -35,6 +35,7 @@ object frmChamados: TfrmChamados
       Height = 25
       Caption = 'Editar'
       TabOrder = 1
+      OnClick = btnEditarClick
     end
     object btnExcluir: TButton
       Left = 280

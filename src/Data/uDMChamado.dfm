@@ -24,8 +24,26 @@ object dmChamado: TdmChamado
   end
   object qryChamado: TFDQuery
     Connection = dmConexao.FDConnection
+    SQL.Strings = (
+      'SELECT'
+      '    ID,'
+      '    CLIENTE_ID,'
+      '    DATA_ABERTURA,'
+      '    DATA_FECHAMENTO,'
+      '    DATA_PREVISTA,'
+      '    DESCRICAO,'
+      '    STATUS,'
+      '    VALOR_TOTAL'
+      'FROM CHAMADO'
+      'WHERE ID = :ID')
     Left = 96
     Top = 264
+    ParamData = <
+      item
+        Name = 'ID'
+        ParamType = ptInput
+        Value = Null
+      end>
   end
   object qryChamadoCRUD: TFDQuery
     Connection = dmConexao.FDConnection

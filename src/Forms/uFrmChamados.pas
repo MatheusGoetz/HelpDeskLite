@@ -16,6 +16,7 @@ type
     btnAtualizar: TButton;
     dbgChamados: TDBGrid;
     procedure btnNovoClick(Sender: TObject);
+    procedure btnEditarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -29,10 +30,42 @@ implementation
 
 {$R *.dfm}
 
+procedure TfrmChamados.btnEditarClick(Sender: TObject);
+var
+  IdChamado: Integer;
+begin
+  if dmChamado.qryChamados.IsEmpty then
+  begin
+    ShowMessage('Nenhum chamado selecionado.');
+    Exit;
+  end;
+
+  IdChamado :=
+    dmChamado.qryChamados.FieldByName('ID').AsInteger;
+
+  frmChamadoCadastro :=
+    TfrmChamadoCadastro.Create(Self);
+
+  try
+    frmChamadoCadastro.EditarChamado(IdChamado);
+
+    if frmChamadoCadastro.ShowModal = mrOk then
+    begin
+      dmChamado.qryChamados.Close;
+      dmChamado.qryChamados.Open;
+    end;
+  finally
+    frmChamadoCadastro.Free;
+  end;
+end;
+
 procedure TfrmChamados.btnNovoClick(Sender: TObject);
 begin
   frmChamadoCadastro := TfrmChamadoCadastro.Create(Self);
+
   try
+    frmChamadoCadastro.NovoChamado;
+
     if frmChamadoCadastro.ShowModal = mrOk then
     begin
       dmChamado.qryChamados.Close;
