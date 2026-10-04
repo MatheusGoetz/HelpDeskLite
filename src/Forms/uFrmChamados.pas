@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Data.DB,
-  Vcl.Grids, Vcl.DBGrids, uDMChamado, uFrmChamadoCadastro;
+  Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro;
 
 type
   TfrmChamados = class(TForm)
@@ -17,6 +17,7 @@ type
     dbgChamados: TDBGrid;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
+    procedure btnExcluirClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -56,6 +57,115 @@ begin
     end;
   finally
     frmChamadoCadastro.Free;
+  end;
+end;
+
+procedure TfrmChamados.btnExcluirClick(Sender: TObject);
+var
+  IdChamado: Integer;
+begin
+  if not dmChamado.qryChamados.Active then
+  begin
+    ShowMessage('A lista de chamados não está disponível.');
+    Exit;
+  end;
+
+  if dmChamado.qryChamados.IsEmpty then
+  begin
+    ShowMessage('Nenhum chamado selecionado.');
+    Exit;
+  end;
+
+  IdChamado :=
+    dmChamado.qryChamados.FieldByName('ID').AsInteger;
+
+  if MessageDlg(
+    'Deseja realmente excluir o chamado #' +
+    IntToStr(IdChamado) + '?',
+    mtConfirmation,
+    [mbYes, mbNo],
+    0
+  ) <> mrYes then
+    Exit;
+
+  try
+    dmConexao.FDConnection.StartTransaction;
+
+    try
+      { Excluir itens vinculados ao chamado }
+      with dmChamado.qryChamadoCRUD do
+      begin
+        Close;
+        SQL.Text :=
+          'DELETE FROM ITEM_CHAMADO ' +
+          'WHERE CHAMADO_ID = :CHAMADO_ID';
+
+        ParamByName('CHAMADO_ID').AsInteger :=
+          IdChamado;
+
+        ExecSQL;
+      end;
+
+      { Excluir histórico de status }
+      with dmChamado.qryChamadoCRUD do
+      begin
+        Close;
+        SQL.Text :=
+          'DELETE FROM STATUS_LOG ' +
+          'WHERE CHAMADO_ID = :CHAMADO_ID';
+
+        ParamByName('CHAMADO_ID').AsInteger :=
+          IdChamado;
+
+        ExecSQL;
+      end;
+
+      { Finalmente excluir o chamado }
+      with dmChamado.qryChamadoCRUD do
+      begin
+        Close;
+        SQL.Text :=
+          'DELETE FROM CHAMADO ' +
+          'WHERE ID = :ID';
+
+        ParamByName('ID').AsInteger :=
+          IdChamado;
+
+        ExecSQL;
+      end;
+
+      dmConexao.FDConnection.Commit;
+
+      ShowMessage('Chamado excluído com sucesso.');
+
+    except
+      on E: Exception do
+      begin
+        if dmConexao.FDConnection.InTransaction then
+          dmConexao.FDConnection.Rollback;
+
+        ShowMessage(
+          'Não foi possível excluir o chamado.' +
+          sLineBreak +
+          sLineBreak +
+          E.Message
+        );
+
+        Exit;
+      end;
+    end;
+
+    dmChamado.qryChamados.Close;
+    dmChamado.qryChamados.Open;
+
+  except
+    on E: Exception do
+      ShowMessage(
+        'Erro ao excluir o chamado.' +
+        sLineBreak +
+        sLineBreak +
+        E.Message
+      );
   end;
 end;
 
