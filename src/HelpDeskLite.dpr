@@ -11,7 +11,8 @@ uses
   uFrmChamados in 'Forms\uFrmChamados.pas' {frmChamados},
   uFrmChamadoCadastro in 'Forms\uFrmChamadoCadastro.pas' {frmChamadoCadastro},
   uDMItemChamado in 'Data\uDMItemChamado.pas' {dmItemChamado: TDataModule},
-  uFrmItensChamado in 'Forms\uFrmItensChamado.pas' {frmItensChamado};
+  uFrmItensChamado in 'Forms\uFrmItensChamado.pas' {frmItensChamado},
+  uFrmItemChamadoCadastro in 'Forms\uFrmItemChamadoCadastro.pas' {frmItemChamadoCadastro};
 
 {$R *.res}
 
@@ -29,5 +30,6 @@ begin
   Application.CreateForm(TfrmChamadoCadastro, frmChamadoCadastro);
   Application.CreateForm(TdmItemChamado, dmItemChamado);
   Application.CreateForm(TfrmItensChamado, frmItensChamado);
+  Application.CreateForm(TfrmItemChamadoCadastro, frmItemChamadoCadastro);
   Application.Run;
 end.

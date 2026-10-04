@@ -10,6 +10,7 @@ object frmItensChamado: TfrmItensChamado
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnResize = FormResize
   TextHeight = 15
   object pnlTop: TPanel
     Left = 0
@@ -25,6 +26,7 @@ object frmItensChamado: TfrmItensChamado
       Height = 25
       Caption = 'Novo'
       TabOrder = 0
+      OnClick = btnNovoClick
     end
     object btnEditar: TButton
       Left = 176
