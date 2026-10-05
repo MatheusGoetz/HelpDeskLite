@@ -9,17 +9,18 @@ uses
 
 type
   TfrmClientes = class(TForm)
-    DBGrid1: TDBGrid;
+    dbgClientes: TDBGrid;
     pnlTop: TPanel;
     btnNovo: TButton;
     btnEditar: TButton;
     btnExcluir: TButton;
-    Button2: TButton;
+    btnAtualizar: TButton;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
-    { Private declarations }
+    procedure AjustarGrid;
   public
     { Public declarations }
   end;
@@ -30,6 +31,33 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TfrmClientes.AjustarGrid;
+var
+  L: Integer;
+begin
+  if not dmCliente.qryClientes.Active then
+    Exit;
+
+  if dbgClientes.Columns.Count = 0 then
+    Exit;
+
+  L := dbgClientes.ClientWidth - 35;
+
+  dbgClientes.Columns[0].Visible := False;
+
+  dbgClientes.Columns[1].Width := Round(L * 0.24);
+  dbgClientes.Columns[2].Width := Round(L * 0.18);
+  dbgClientes.Columns[3].Width := Round(L * 0.24);
+  dbgClientes.Columns[4].Width := Round(L * 0.18);
+  dbgClientes.Columns[5].Width := Round(L * 0.16);
+
+  dbgClientes.Columns[1].Title.Caption := 'Nome';
+  dbgClientes.Columns[2].Title.Caption := 'Documento';
+  dbgClientes.Columns[3].Title.Caption := 'E-mail';
+  dbgClientes.Columns[4].Title.Caption := 'Telefone';
+  dbgClientes.Columns[5].Title.Caption := 'Cadastro';
+end;
 
 procedure TfrmClientes.btnEditarClick(Sender: TObject);
 var
@@ -66,6 +94,11 @@ begin
   finally
     frmClienteCadastro.Free;
   end;
+end;
+
+procedure TfrmClientes.FormResize(Sender: TObject);
+begin
+   AjustarGrid;
 end;
 
 procedure TfrmClientes.btnExcluirClick(Sender: TObject);

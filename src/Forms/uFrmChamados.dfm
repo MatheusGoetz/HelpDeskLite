@@ -11,6 +11,7 @@ object frmChamados: TfrmChamados
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poScreenCenter
+  OnResize = FormResize
   TextHeight = 15
   object pnlTop: TPanel
     Left = 0
@@ -19,7 +20,6 @@ object frmChamados: TfrmChamados
     Height = 50
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 513
     object btnNovo: TButton
       Left = 40
       Top = 13
@@ -77,9 +77,6 @@ object frmChamados: TfrmChamados
     Height = 41
     Align = alBottom
     TabOrder = 2
-    ExplicitLeft = 456
-    ExplicitTop = 280
-    ExplicitWidth = 185
     object btnItens: TButton
       Left = 40
       Top = 6

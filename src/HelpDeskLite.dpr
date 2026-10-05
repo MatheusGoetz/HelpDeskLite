@@ -17,19 +17,15 @@ uses
 {$R *.res}
 
 begin
-  Application.Initialize;
-  Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TfrmChamados, frmChamados);
-  Application.CreateForm(TfrmPrincipal, frmPrincipal);
-  Application.CreateForm(TdmConexao, dmConexao);
-  Application.CreateForm(TdmCliente, dmCliente);
-  Application.CreateForm(TfrmClientes, frmClientes);
-  Application.CreateForm(TfrmClienteCadastro, frmClienteCadastro);
-  Application.CreateForm(TdmChamado, dmChamado);
-  Application.CreateForm(TfrmChamados, frmChamados);
-  Application.CreateForm(TfrmChamadoCadastro, frmChamadoCadastro);
-  Application.CreateForm(TdmItemChamado, dmItemChamado);
-  Application.CreateForm(TfrmItensChamado, frmItensChamado);
-  Application.CreateForm(TfrmItemChamadoCadastro, frmItemChamadoCadastro);
-  Application.Run;
+Application.Initialize;
+Application.MainFormOnTaskbar := True;
+
+Application.CreateForm(TdmConexao, dmConexao);
+Application.CreateForm(TdmCliente, dmCliente);
+Application.CreateForm(TdmChamado, dmChamado);
+Application.CreateForm(TdmItemChamado, dmItemChamado);
+
+Application.CreateForm(TfrmPrincipal, frmPrincipal);
+
+Application.Run;
 end.

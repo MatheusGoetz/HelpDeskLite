@@ -11,8 +11,9 @@ object frmClientes: TfrmClientes
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poScreenCenter
+  OnResize = FormResize
   TextHeight = 15
-  object DBGrid1: TDBGrid
+  object dbgClientes: TDBGrid
     Left = 0
     Top = 41
     Width = 984
@@ -60,7 +61,7 @@ object frmClientes: TfrmClientes
       TabOrder = 2
       OnClick = btnExcluirClick
     end
-    object Button2: TButton
+    object btnAtualizar: TButton
       Left = 304
       Top = 10
       Width = 75

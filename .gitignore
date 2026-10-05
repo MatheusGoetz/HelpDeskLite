@@ -1,11 +1,13 @@
-*.dcu
-*.~*
-*.identcache
-*.local
-*.tvsconfig
-__history/
+# Firebird database
+database/*.FDB
+database/*.fdb
+
+# Delphi build
 Win32/
 Win64/
-Debug/
-Release/
+__history/
+*.dcu
 *.exe
+*.identcache
+*.local
+*.stat
