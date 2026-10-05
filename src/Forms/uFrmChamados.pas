@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Data.DB,
-  Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro, uFrmItensChamado;
+  Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro, uFrmItensChamado,
+  frxSmartMemo, frCoreClasses, frxClass, frxDBSet;
 
 type
   TfrmChamados = class(TForm)
@@ -17,11 +18,15 @@ type
     dbgChamados: TDBGrid;
     pnlDown: TPanel;
     btnItens: TButton;
+    btnRelatorio: TButton;
+    frxReportChamados: TfrxReport;
+    frxDBChamados: TfrxDBDataset;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
     procedure btnItensClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure btnRelatorioClick(Sender: TObject);
   private
     procedure AjustarGrid;
   public
@@ -252,6 +257,14 @@ begin
   finally
     frmChamadoCadastro.Free;
   end;
+end;
+
+procedure TfrmChamados.btnRelatorioClick(Sender: TObject);
+begin
+  if not dmChamado.qryChamados.Active then
+    dmChamado.qryChamados.Open;
+
+  frxReportChamados.ShowReport;
 end;
 
 procedure TfrmChamados.FormResize(Sender: TObject);
