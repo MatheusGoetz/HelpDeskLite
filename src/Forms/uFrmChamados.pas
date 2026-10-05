@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Data.DB,
-  Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro, uFrmItensChamado;
+  Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro, uFrmItensChamado,
+  frxSmartMemo, frCoreClasses, frxClass, frxDBSet;
 
 type
   TfrmChamados = class(TForm)
@@ -17,12 +18,17 @@ type
     dbgChamados: TDBGrid;
     pnlDown: TPanel;
     btnItens: TButton;
+    btnRelatorio: TButton;
+    frxReportChamados: TfrxReport;
+    frxDBChamados: TfrxDBDataset;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
     procedure btnItensClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure btnRelatorioClick(Sender: TObject);
   private
-    { Private declarations }
+    procedure AjustarGrid;
   public
     { Public declarations }
   end;
@@ -33,6 +39,41 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TfrmChamados.AjustarGrid;
+var
+  L: Integer;
+begin
+  if not dmChamado.qryChamados.Active then
+    Exit;
+
+  if dbgChamados.Columns.Count = 0 then
+    Exit;
+
+  L := dbgChamados.ClientWidth - 35;
+
+  dbgChamados.Columns[0].Width := Round(L * 0.06); // ID
+
+  dbgChamados.Columns[1].Visible := False; // CLIENTE_ID
+
+  dbgChamados.Columns[2].Width := Round(L * 0.18); // CLIENTE
+  dbgChamados.Columns[3].Width := Round(L * 0.13); // DATA_ABERTURA
+
+  dbgChamados.Columns[4].Visible := False; // DATA_FECHAMENTO
+
+  dbgChamados.Columns[5].Width := Round(L * 0.13); // DATA_PREVISTA
+  dbgChamados.Columns[6].Width := Round(L * 0.27); // DESCRICAO
+  dbgChamados.Columns[7].Width := Round(L * 0.12); // STATUS
+  dbgChamados.Columns[8].Width := Round(L * 0.11); // VALOR_TOTAL
+
+  dbgChamados.Columns[0].Title.Caption := 'ID';
+  dbgChamados.Columns[2].Title.Caption := 'Cliente';
+  dbgChamados.Columns[3].Title.Caption := 'Abertura';
+  dbgChamados.Columns[5].Title.Caption := 'Prevista';
+  dbgChamados.Columns[6].Title.Caption := 'Descrição';
+  dbgChamados.Columns[7].Title.Caption := 'Status';
+  dbgChamados.Columns[8].Title.Caption := 'Valor Total';
+end;
 
 procedure TfrmChamados.btnEditarClick(Sender: TObject);
 var
@@ -210,10 +251,25 @@ begin
     begin
       dmChamado.qryChamados.Close;
       dmChamado.qryChamados.Open;
+
+      AjustarGrid;
     end;
   finally
     frmChamadoCadastro.Free;
   end;
+end;
+
+procedure TfrmChamados.btnRelatorioClick(Sender: TObject);
+begin
+  if not dmChamado.qryChamados.Active then
+    dmChamado.qryChamados.Open;
+
+  frxReportChamados.ShowReport;
+end;
+
+procedure TfrmChamados.FormResize(Sender: TObject);
+begin
+  AjustarGrid;
 end;
 
 end.

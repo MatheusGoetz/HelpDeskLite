@@ -10,6 +10,7 @@ object frmItensChamado: TfrmItensChamado
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Position = poScreenCenter
   OnResize = FormResize
   TextHeight = 15
   object pnlTop: TPanel
