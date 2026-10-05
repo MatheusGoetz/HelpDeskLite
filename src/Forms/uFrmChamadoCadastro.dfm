@@ -93,6 +93,7 @@ object frmChamadoCadastro: TfrmChamadoCadastro
     Top = 255
     Width = 203
     Height = 23
+    ReadOnly = True
     TabOrder = 4
   end
   object btnCancelar: TButton

@@ -42,6 +42,8 @@ procedure TfrmChamadoCadastro.NovoChamado;
 begin
   FIdChamado := 0;
 
+  edtValorTotal.Text := '0,00';
+
   Caption := 'Novo Chamado';
 
   CarregarClientes;

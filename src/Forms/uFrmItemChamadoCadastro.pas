@@ -20,8 +20,10 @@ type
     procedure btnSalvarClick(Sender: TObject);
   private
     FChamadoId: Integer;
+    FItemId: Integer;
   public
     procedure NovoItem(AChamadoId: Integer);
+    procedure EditarItem(AItemId, AChamadoId: Integer);
   end;
 
 var
@@ -79,14 +81,29 @@ begin
       begin
         Close;
 
-        SQL.Text :=
-          'INSERT INTO ITEM_CHAMADO ' +
-          '(CHAMADO_ID, DESCRICAO, QUANTIDADE, VALOR_UNITARIO) ' +
-          'VALUES ' +
-          '(:CHAMADO_ID, :DESCRICAO, :QUANTIDADE, :VALOR_UNITARIO)';
+        if FItemId = 0 then
+        begin
+          SQL.Text :=
+            'INSERT INTO ITEM_CHAMADO ' +
+            '(CHAMADO_ID, DESCRICAO, QUANTIDADE, VALOR_UNITARIO) ' +
+            'VALUES ' +
+            '(:CHAMADO_ID, :DESCRICAO, :QUANTIDADE, :VALOR_UNITARIO)';
 
-        ParamByName('CHAMADO_ID').AsInteger :=
-          FChamadoId;
+          ParamByName('CHAMADO_ID').AsInteger :=
+            FChamadoId;
+        end
+        else
+        begin
+          SQL.Text :=
+            'UPDATE ITEM_CHAMADO SET ' +
+            'DESCRICAO = :DESCRICAO, ' +
+            'QUANTIDADE = :QUANTIDADE, ' +
+            'VALOR_UNITARIO = :VALOR_UNITARIO ' +
+            'WHERE ID = :ID';
+
+          ParamByName('ID').AsInteger :=
+            FItemId;
+        end;
 
         ParamByName('DESCRICAO').AsString :=
           Trim(edtDescricao.Text);
@@ -114,24 +131,68 @@ begin
       end;
     end;
 
-    ShowMessage('Item adicionado com sucesso.');
+    if FItemId = 0 then
+      ShowMessage('Item adicionado com sucesso.')
+    else
+      ShowMessage('Item atualizado com sucesso.');
 
     ModalResult := mrOk;
 
   except
     on E: Exception do
       ShowMessage(
-        'Não foi possível adicionar o item.' +
-        sLineBreak +
-        sLineBreak +
+        'Não foi possível salvar o item.' +
+        sLineBreak + sLineBreak +
         E.Message
       );
+  end;
+end;
+
+procedure TfrmItemChamadoCadastro.EditarItem(
+  AItemId, AChamadoId: Integer);
+begin
+  FChamadoId := AChamadoId;
+  FItemId := AItemId;
+
+  Caption := 'Editar Item';
+
+  with dmItemChamado.qryItemCRUD do
+  begin
+    Close;
+
+    SQL.Text :=
+      'SELECT DESCRICAO, QUANTIDADE, VALOR_UNITARIO ' +
+      'FROM ITEM_CHAMADO ' +
+      'WHERE ID = :ID AND CHAMADO_ID = :CHAMADO_ID';
+
+    ParamByName('ID').AsInteger := FItemId;
+    ParamByName('CHAMADO_ID').AsInteger := FChamadoId;
+
+    Open;
+
+    if not IsEmpty then
+    begin
+      edtDescricao.Text :=
+        FieldByName('DESCRICAO').AsString;
+
+      edtQuantidade.Text :=
+        FieldByName('QUANTIDADE').AsString;
+
+      edtValorUnitario.Text :=
+        FormatFloat(
+          '0.00',
+          FieldByName('VALOR_UNITARIO').AsCurrency
+        );
+    end;
+
+    Close;
   end;
 end;
 
 procedure TfrmItemChamadoCadastro.NovoItem(AChamadoId: Integer);
 begin
   FChamadoId := AChamadoId;
+  FItemId := 0;
 
   Caption := 'Novo Item';
 

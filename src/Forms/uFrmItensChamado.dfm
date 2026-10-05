@@ -30,11 +30,12 @@ object frmItensChamado: TfrmItensChamado
     end
     object btnEditar: TButton
       Left = 176
-      Top = 9
+      Top = 10
       Width = 75
       Height = 25
       Caption = 'Editar'
       TabOrder = 1
+      OnClick = btnEditarClick
     end
     object btnExcluir: TButton
       Left = 280
@@ -43,6 +44,7 @@ object frmItensChamado: TfrmItensChamado
       Height = 25
       Caption = 'Excluir'
       TabOrder = 2
+      OnClick = btnExcluirClick
     end
     object btnFechar: TButton
       Left = 376
