@@ -21,7 +21,6 @@ object frmChamados: TfrmChamados
     Height = 50
     Align = alTop
     TabOrder = 0
-    ExplicitTop = -6
     object lblDataInicial: TLabel
       Left = 424
       Top = 0
@@ -158,6 +157,7 @@ object frmChamados: TfrmChamados
     TitleFont.Height = -12
     TitleFont.Name = 'Segoe UI'
     TitleFont.Style = []
+    OnDrawColumnCell = dbgChamadosDrawColumnCell
   end
   object pnlDown: TPanel
     Left = 0
@@ -166,6 +166,34 @@ object frmChamados: TfrmChamados
     Height = 41
     Align = alBottom
     TabOrder = 2
+    object lblTotalAbertos: TLabel
+      Left = 627
+      Top = 6
+      Width = 53
+      Height = 15
+      Caption = 'Abertos: 0'
+    end
+    object lblTotalAndamento: TLabel
+      Left = 696
+      Top = 6
+      Width = 93
+      Height = 15
+      Caption = 'Em andamento: 0'
+    end
+    object lblTotalConcluidos: TLabel
+      Left = 795
+      Top = 6
+      Width = 72
+      Height = 15
+      Caption = 'Conclu'#237'dos: 0'
+    end
+    object lblTotalAtrasados: TLabel
+      Left = 878
+      Top = 6
+      Width = 64
+      Height = 15
+      Caption = 'Em atraso: 0'
+    end
     object btnItens: TButton
       Left = 8
       Top = 6

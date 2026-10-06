@@ -12,7 +12,8 @@ uses
   uFrmChamadoCadastro in 'Forms\uFrmChamadoCadastro.pas' {frmChamadoCadastro},
   uDMItemChamado in 'Data\uDMItemChamado.pas' {dmItemChamado: TDataModule},
   uFrmItensChamado in 'Forms\uFrmItensChamado.pas' {frmItensChamado},
-  uFrmItemChamadoCadastro in 'Forms\uFrmItemChamadoCadastro.pas' {frmItemChamadoCadastro};
+  uFrmItemChamadoCadastro in 'Forms\uFrmItemChamadoCadastro.pas' {frmItemChamadoCadastro},
+  uChamadoService in 'Services\uChamadoService.pas';
 
 {$R *.res}
 
@@ -21,11 +22,9 @@ Application.Initialize;
 Application.MainFormOnTaskbar := True;
 
 Application.CreateForm(TdmConexao, dmConexao);
-Application.CreateForm(TdmCliente, dmCliente);
-Application.CreateForm(TdmChamado, dmChamado);
-Application.CreateForm(TdmItemChamado, dmItemChamado);
-
-Application.CreateForm(TfrmPrincipal, frmPrincipal);
-
-Application.Run;
+  Application.CreateForm(TdmCliente, dmCliente);
+  Application.CreateForm(TdmChamado, dmChamado);
+  Application.CreateForm(TdmItemChamado, dmItemChamado);
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
+  Application.Run;
 end.

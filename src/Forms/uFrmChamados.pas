@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Data.DB,
   Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro, uFrmItensChamado,
-  frxSmartMemo, frCoreClasses, frxClass, frxDBSet, Vcl.ComCtrls, System.DateUtils;
+  frxSmartMemo, frCoreClasses, frxClass, frxDBSet, Vcl.ComCtrls, System.DateUtils, uChamadoService;
 
 type
   TfrmChamados = class(TForm)
@@ -31,6 +31,10 @@ type
     edtFiltroCliente: TEdit;
     btnFiltrar: TButton;
     btnLimparFiltro: TButton;
+    lblTotalAbertos: TLabel;
+    lblTotalAndamento: TLabel;
+    lblTotalConcluidos: TLabel;
+    lblTotalAtrasados: TLabel;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
@@ -40,8 +44,11 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnLimparFiltroClick(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
+    procedure dbgChamadosDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     procedure AjustarGrid;
+    procedure AtualizarIndicadores;
   public
     { Public declarations }
   end;
@@ -52,6 +59,77 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TfrmChamados.AtualizarIndicadores;
+var
+  TotalAbertos: Integer;
+  TotalAndamento: Integer;
+  TotalConcluidos: Integer;
+  TotalAtrasados: Integer;
+  Status: string;
+  DataPrevista: TDateTime;
+begin
+  TotalAbertos := 0;
+  TotalAndamento := 0;
+  TotalConcluidos := 0;
+  TotalAtrasados := 0;
+
+  if not dmChamado.qryChamados.Active then
+    Exit;
+
+  dmChamado.qryChamados.DisableControls;
+
+  try
+    dmChamado.qryChamados.First;
+
+    while not dmChamado.qryChamados.Eof do
+    begin
+      Status :=
+        dmChamado.qryChamados
+          .FieldByName('STATUS').AsString;
+
+      if SameText(Status, 'ABERTO') then
+        Inc(TotalAbertos)
+      else if SameText(Status, 'EM_ANDAMENTO') then
+        Inc(TotalAndamento)
+      else if SameText(Status, 'CONCLUIDO') then
+        Inc(TotalConcluidos);
+
+      if not dmChamado.qryChamados
+        .FieldByName('DATA_PREVISTA').IsNull then
+      begin
+        DataPrevista :=
+          dmChamado.qryChamados
+            .FieldByName('DATA_PREVISTA').AsDateTime;
+
+        if TChamadoService.EstaAtrasado(
+          DataPrevista,
+          Status
+        ) then
+          Inc(TotalAtrasados);
+      end;
+
+      dmChamado.qryChamados.Next;
+    end;
+
+    dmChamado.qryChamados.First;
+
+  finally
+    dmChamado.qryChamados.EnableControls;
+  end;
+
+  lblTotalAbertos.Caption :=
+    'Abertos: ' + IntToStr(TotalAbertos);
+
+  lblTotalAndamento.Caption :=
+    'Em andamento: ' + IntToStr(TotalAndamento);
+
+  lblTotalConcluidos.Caption :=
+    'Concluídos: ' + IntToStr(TotalConcluidos);
+
+  lblTotalAtrasados.Caption :=
+    'Em atraso: ' + IntToStr(TotalAtrasados);
+end;
 
 procedure TfrmChamados.AjustarGrid;
 var
@@ -255,6 +333,7 @@ begin
     edtFiltroCliente.Text
   );
 
+  AtualizarIndicadores;
   AjustarGrid;
 end;
 
@@ -335,8 +414,61 @@ begin
   frxReportChamados.ShowReport;
 end;
 
+procedure TfrmChamados.dbgChamadosDrawColumnCell(
+  Sender: TObject;
+  const Rect: TRect;
+  DataCol: Integer;
+  Column: TColumn;
+  State: TGridDrawState);
+var
+  Status: string;
+  DataPrevista: TDateTime;
+  Atrasado: Boolean;
+begin
+  Atrasado := False;
+
+  if dmChamado.qryChamados.Active and
+     (not dmChamado.qryChamados.IsEmpty) then
+  begin
+    Status :=
+      dmChamado.qryChamados
+        .FieldByName('STATUS').AsString;
+
+    if not dmChamado.qryChamados
+      .FieldByName('DATA_PREVISTA').IsNull then
+    begin
+      DataPrevista :=
+        dmChamado.qryChamados
+          .FieldByName('DATA_PREVISTA').AsDateTime;
+
+      Atrasado :=
+        TChamadoService.EstaAtrasado(
+          DataPrevista,
+          Status
+        );
+    end;
+  end;
+
+  if Atrasado and not (gdSelected in State) then
+  begin
+    dbgChamados.Canvas.Brush.Color :=
+      RGB(255, 225, 225);
+
+    dbgChamados.Canvas.Font.Color :=
+      clRed;
+  end;
+
+  dbgChamados.DefaultDrawColumnCell(
+    Rect,
+    DataCol,
+    Column,
+    State
+  );
+end;
+
 procedure TfrmChamados.FormResize(Sender: TObject);
 begin
+  AtualizarIndicadores;
   AjustarGrid;
 end;
 
@@ -354,6 +486,7 @@ begin
     ''
   );
 
+  AtualizarIndicadores;
   AjustarGrid;
 end;
 
