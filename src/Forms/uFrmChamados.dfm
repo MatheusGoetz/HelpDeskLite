@@ -23,7 +23,6 @@ object frmChamados: TfrmChamados
     Color = 3877150
     ParentBackground = False
     TabOrder = 0
-    ExplicitTop = -6
     object lblDataInicial: TLabel
       Left = 424
       Top = 0
@@ -262,7 +261,7 @@ object frmChamados: TfrmChamados
     ReportOptions.CreateDate = 46301.769471284700000000
     ReportOptions.Description.Strings = (
       'Relat'#195#179'rio de Chamados - HelpDeskLite')
-    ReportOptions.LastChange = 46301.777331180600000000
+    ReportOptions.LastChange = 46301.840209733800000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -322,7 +321,9 @@ object frmChamados: TfrmChamados
         Width = 755.906000000000000000
         object MemoTitulo: TfrxMemoView
           AllowVectorExport = True
-          Width = 1046.929810000000000000
+          Left = 1.330550000000000000
+          Top = 7.559060000000000000
+          Width = 752.126470000000000000
           Height = 30.236240000000000000
           ContentScaleOptions.Constraints.MaxIterationValue = 0
           ContentScaleOptions.Constraints.MinIterationValue = 0
@@ -332,51 +333,64 @@ object frmChamados: TfrmChamados
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           Frame.Typ = []
+          HAlign = haCenter
           Memo.UTF8W = (
             'HELPDESK LITE')
           ParentFont = False
         end
         object MemoSubtitulo: TfrxMemoView
           AllowVectorExport = True
-          Top = 30.236240000000000000
-          Width = 1046.929810000000000000
+          Left = 1.330550000000000000
+          Top = 37.795300000000000000
+          Width = 752.126470000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           Frame.Typ = []
+          HAlign = haCenter
           Memo.UTF8W = (
             'Relat'#243'rio de Chamados')
           ParentFont = False
         end
         object MemoFiltros1: TfrxMemoView
           AllowVectorExport = True
-          Top = 56.692950000000000000
-          Width = 1046.929810000000000000
+          Left = 1.330550000000000000
+          Top = 64.252010000000000000
+          Width = 752.126470000000000000
           Height = 18.897650000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
+          HAlign = haCenter
           Memo.UTF8W = (
             'Per'#237'odo: [DATA_INICIAL] at'#233' [DATA_FINAL]')
           ParentFont = False
         end
         object MemoFiltros2: TfrxMemoView
           AllowVectorExport = True
-          Top = 75.590600000000000000
-          Width = 1046.929810000000000000
+          Left = 1.330550000000000000
+          Top = 83.149660000000000000
+          Width = 752.126470000000000000
           Height = 18.897650000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -9
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = []
+          HAlign = haCenter
           Memo.UTF8W = (
             'Status: [STATUS_FILTRO]    Cliente: [CLIENTE_FILTRO]')
           ParentFont = False
@@ -396,6 +410,8 @@ object frmChamados: TfrmChamados
           AllowVectorExport = True
           Width = 45.354360000000000000
           Height = 26.456710000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -410,8 +426,10 @@ object frmChamados: TfrmChamados
         object HdrCliente: TfrxMemoView
           AllowVectorExport = True
           Left = 45.354360000000000000
-          Width = 260.787570000000000000
+          Width = 207.874150000000000000
           Height = 26.456710000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -425,9 +443,11 @@ object frmChamados: TfrmChamados
         end
         object HdrAbertura: TfrxMemoView
           AllowVectorExport = True
-          Left = 306.141930000000000000
+          Left = 253.228510000000000000
           Width = 124.724490000000000000
           Height = 26.456710000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -441,9 +461,11 @@ object frmChamados: TfrmChamados
         end
         object HdrPrevista: TfrxMemoView
           AllowVectorExport = True
-          Left = 430.866420000000000000
+          Left = 377.953000000000000000
           Width = 124.724490000000000000
           Height = 26.456710000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -457,9 +479,11 @@ object frmChamados: TfrmChamados
         end
         object HdrStatus: TfrxMemoView
           AllowVectorExport = True
-          Left = 555.590910000000000000
-          Width = 211.653680000000000000
+          Left = 502.677490000000000000
+          Width = 120.944960000000000000
           Height = 26.456710000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -473,9 +497,11 @@ object frmChamados: TfrmChamados
         end
         object HdrValor: TfrxMemoView
           AllowVectorExport = True
-          Left = 767.244590000000000000
+          Left = 623.622035040000000000
           Width = 279.685220000000000000
           Height = 26.456710000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -535,6 +561,8 @@ object frmChamados: TfrmChamados
           AllowVectorExport = True
           Width = 45.354360000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -10
@@ -549,8 +577,10 @@ object frmChamados: TfrmChamados
         object FldCliente: TfrxMemoView
           AllowVectorExport = True
           Left = 45.354360000000000000
-          Width = 260.787570000000000000
+          Width = 207.874150000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -10
@@ -563,9 +593,11 @@ object frmChamados: TfrmChamados
         end
         object FldAbertura: TfrxMemoView
           AllowVectorExport = True
-          Left = 306.141930000000000000
-          Width = 124.724490000000000000
+          Left = 253.228510000000000000
+          Width = 113.385900000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           DisplayFormat.Kind = fkDateTime
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -580,9 +612,11 @@ object frmChamados: TfrmChamados
         end
         object FldPrevista: TfrxMemoView
           AllowVectorExport = True
-          Left = 430.866420000000000000
+          Left = 366.614410000000000000
           Width = 124.724490000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           DisplayFormat.Kind = fkDateTime
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -597,9 +631,11 @@ object frmChamados: TfrmChamados
         end
         object FldStatus: TfrxMemoView
           AllowVectorExport = True
-          Left = 555.590910000000000000
-          Width = 211.653680000000000000
+          Left = 491.338900000000000000
+          Width = 132.283550000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -10
@@ -613,9 +649,11 @@ object frmChamados: TfrmChamados
         end
         object FldValor: TfrxMemoView
           AllowVectorExport = True
-          Left = 767.244590000000000000
+          Left = 623.622083860000000000
           Width = 279.685220000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -634,6 +672,8 @@ object frmChamados: TfrmChamados
           Width = 1046.929810000000000000
           Height = 30.236240000000000000
           StretchMode = smActualHeight
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -10
@@ -809,6 +849,40 @@ object frmChamados: TfrmChamados
     DataSetOptions = []
     Left = 984
     Top = 408
+    FieldDefs = <
+      item
+        FieldName = 'ID'
+      end
+      item
+        FieldName = 'CLIENTE_ID'
+      end
+      item
+        FieldName = 'CLIENTE'
+        FieldType = fftString
+        Size = 120
+      end
+      item
+        FieldName = 'DATA_ABERTURA'
+      end
+      item
+        FieldName = 'DATA_FECHAMENTO'
+      end
+      item
+        FieldName = 'DATA_PREVISTA'
+      end
+      item
+        FieldName = 'DESCRICAO'
+        FieldType = fftString
+        Size = 500
+      end
+      item
+        FieldName = 'STATUS'
+        FieldType = fftString
+        Size = 20
+      end
+      item
+        FieldName = 'VALOR_TOTAL'
+      end>
   end
   object frxPDFExportChamados: TfrxPDFExport
     UseFileCache = True
