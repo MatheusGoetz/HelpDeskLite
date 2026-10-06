@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Data.DB,
   Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro, uFrmItensChamado,
-  frxSmartMemo, frCoreClasses, frxClass, frxDBSet, Vcl.ComCtrls, System.DateUtils, uChamadoService;
+  frxSmartMemo, frCoreClasses, frxClass, frxDBSet, Vcl.ComCtrls, System.DateUtils, uChamadoService,
+  frxExportBaseDialog, frxExportPDF;
 
 type
   TfrmChamados = class(TForm)
@@ -35,12 +36,16 @@ type
     lblTotalAndamento: TLabel;
     lblTotalConcluidos: TLabel;
     lblTotalAtrasados: TLabel;
+    frxPDFExportChamados: TfrxPDFExport;
+    dlgSalvarPDF: TSaveDialog;
+    btnExportarPDF: TButton;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
     procedure btnItensClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure btnRelatorioClick(Sender: TObject);
+    procedure btnExportarPDFClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnLimparFiltroClick(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
@@ -59,6 +64,59 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TfrmChamados.btnExportarPDFClick(Sender: TObject);
+begin
+  if not dmChamado.qryChamados.Active then
+  begin
+    ShowMessage('Realize uma pesquisa antes de exportar.');
+    Exit;
+  end;
+
+  if dmChamado.qryChamados.IsEmpty then
+  begin
+    ShowMessage('Não existem chamados para exportar.');
+    Exit;
+  end;
+
+  dlgSalvarPDF.FileName :=
+    'Relatorio_Chamados_' +
+    FormatDateTime('yyyymmdd_hhnnss', Now) +
+    '.pdf';
+
+  if not dlgSalvarPDF.Execute then
+    Exit;
+
+  try
+    frxPDFExportChamados.FileName :=
+      dlgSalvarPDF.FileName;
+
+    frxPDFExportChamados.ShowDialog :=
+      False;
+
+    frxPDFExportChamados.OpenAfterExport :=
+      False;
+
+    frxReportChamados.PrepareReport;
+
+    frxReportChamados.Export(
+      frxPDFExportChamados
+    );
+
+    ShowMessage(
+      'Relatório exportado com sucesso.'
+    );
+
+  except
+    on E: Exception do
+      ShowMessage(
+        'Não foi possível exportar o relatório.' +
+        sLineBreak +
+        sLineBreak +
+        E.Message
+      );
+  end;
+end;
 
 procedure TfrmChamados.AtualizarIndicadores;
 var
@@ -407,9 +465,47 @@ begin
 end;
 
 procedure TfrmChamados.btnRelatorioClick(Sender: TObject);
+var
+  StatusFiltro: string;
+  ClienteFiltro: string;
 begin
   if not dmChamado.qryChamados.Active then
-    dmChamado.qryChamados.Open;
+  begin
+    ShowMessage('Realize a pesquisa antes de gerar o relatório.');
+    Exit;
+  end;
+
+  if cmbFiltroStatus.ItemIndex <= 0 then
+    StatusFiltro := 'TODOS'
+  else
+    StatusFiltro := cmbFiltroStatus.Text;
+
+  if Trim(edtFiltroCliente.Text) = '' then
+    ClienteFiltro := 'TODOS'
+  else
+    ClienteFiltro := edtFiltroCliente.Text;
+
+  frxReportChamados.Variables['DATA_INICIAL'] :=
+    QuotedStr(
+      FormatDateTime(
+        'dd/mm/yyyy',
+        dtpDataInicial.Date
+      )
+    );
+
+  frxReportChamados.Variables['DATA_FINAL'] :=
+    QuotedStr(
+      FormatDateTime(
+        'dd/mm/yyyy',
+        dtpDataFinal.Date
+      )
+    );
+
+  frxReportChamados.Variables['STATUS_FILTRO'] :=
+    QuotedStr(StatusFiltro);
+
+  frxReportChamados.Variables['CLIENTE_FILTRO'] :=
+    QuotedStr(ClienteFiltro);
 
   frxReportChamados.ShowReport;
 end;
