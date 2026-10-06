@@ -33,6 +33,8 @@ object frmClientes: TfrmClientes
     Width = 984
     Height = 41
     Align = alTop
+    Color = 3877150
+    ParentBackground = False
     TabOrder = 1
     object btnNovo: TButton
       Left = 16

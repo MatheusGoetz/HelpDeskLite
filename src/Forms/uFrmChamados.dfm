@@ -20,13 +20,24 @@ object frmChamados: TfrmChamados
     Width = 1084
     Height = 50
     Align = alTop
+    Color = 3877150
+    ParentBackground = False
     TabOrder = 0
+    ExplicitTop = -6
     object lblDataInicial: TLabel
       Left = 424
       Top = 0
       Width = 61
       Height = 15
       Caption = 'Data inicial:'
+      Color = clWhite
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentColor = False
+      ParentFont = False
     end
     object lblDataFinal: TLabel
       Left = 520
@@ -34,6 +45,12 @@ object frmChamados: TfrmChamados
       Width = 53
       Height = 15
       Caption = 'Data final:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
     end
     object lblFiltroStatus: TLabel
       Left = 598
@@ -41,6 +58,12 @@ object frmChamados: TfrmChamados
       Width = 35
       Height = 15
       Caption = 'Status:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
     end
     object lblFiltroCliente: TLabel
       Left = 749
@@ -48,6 +71,12 @@ object frmChamados: TfrmChamados
       Width = 40
       Height = 15
       Caption = 'Cliente:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
     end
     object btnNovo: TButton
       Left = 8
@@ -780,40 +809,6 @@ object frmChamados: TfrmChamados
     DataSetOptions = []
     Left = 984
     Top = 408
-    FieldDefs = <
-      item
-        FieldName = 'ID'
-      end
-      item
-        FieldName = 'CLIENTE_ID'
-      end
-      item
-        FieldName = 'CLIENTE'
-        FieldType = fftString
-        Size = 120
-      end
-      item
-        FieldName = 'DATA_ABERTURA'
-      end
-      item
-        FieldName = 'DATA_FECHAMENTO'
-      end
-      item
-        FieldName = 'DATA_PREVISTA'
-      end
-      item
-        FieldName = 'DESCRICAO'
-        FieldType = fftString
-        Size = 500
-      end
-      item
-        FieldName = 'STATUS'
-        FieldType = fftString
-        Size = 20
-      end
-      item
-        FieldName = 'VALOR_TOTAL'
-      end>
   end
   object frxPDFExportChamados: TfrxPDFExport
     UseFileCache = True
