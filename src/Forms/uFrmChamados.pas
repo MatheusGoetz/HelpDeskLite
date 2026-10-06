@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Data.DB,
   Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro, uFrmItensChamado,
-  frxSmartMemo, frCoreClasses, frxClass, frxDBSet;
+  frxSmartMemo, frCoreClasses, frxClass, frxDBSet, Vcl.ComCtrls, System.DateUtils, uChamadoService,
+  frxExportBaseDialog, frxExportPDF;
 
 type
   TfrmChamados = class(TForm)
@@ -21,14 +22,38 @@ type
     btnRelatorio: TButton;
     frxReportChamados: TfrxReport;
     frxDBChamados: TfrxDBDataset;
+    lblDataInicial: TLabel;
+    dtpDataInicial: TDateTimePicker;
+    lblDataFinal: TLabel;
+    dtpDataFinal: TDateTimePicker;
+    lblFiltroStatus: TLabel;
+    cmbFiltroStatus: TComboBox;
+    lblFiltroCliente: TLabel;
+    edtFiltroCliente: TEdit;
+    btnFiltrar: TButton;
+    btnLimparFiltro: TButton;
+    lblTotalAbertos: TLabel;
+    lblTotalAndamento: TLabel;
+    lblTotalConcluidos: TLabel;
+    lblTotalAtrasados: TLabel;
+    frxPDFExportChamados: TfrxPDFExport;
+    dlgSalvarPDF: TSaveDialog;
+    btnExportarPDF: TButton;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
     procedure btnItensClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure btnRelatorioClick(Sender: TObject);
+    procedure btnExportarPDFClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnLimparFiltroClick(Sender: TObject);
+    procedure btnFiltrarClick(Sender: TObject);
+    procedure dbgChamadosDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     procedure AjustarGrid;
+    procedure AtualizarIndicadores;
   public
     { Public declarations }
   end;
@@ -39,6 +64,130 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TfrmChamados.btnExportarPDFClick(Sender: TObject);
+begin
+  if not dmChamado.qryChamados.Active then
+  begin
+    ShowMessage('Realize uma pesquisa antes de exportar.');
+    Exit;
+  end;
+
+  if dmChamado.qryChamados.IsEmpty then
+  begin
+    ShowMessage('Não existem chamados para exportar.');
+    Exit;
+  end;
+
+  dlgSalvarPDF.FileName :=
+    'Relatorio_Chamados_' +
+    FormatDateTime('yyyymmdd_hhnnss', Now) +
+    '.pdf';
+
+  if not dlgSalvarPDF.Execute then
+    Exit;
+
+  try
+    frxPDFExportChamados.FileName :=
+      dlgSalvarPDF.FileName;
+
+    frxPDFExportChamados.ShowDialog :=
+      False;
+
+    frxPDFExportChamados.OpenAfterExport :=
+      False;
+
+    frxReportChamados.PrepareReport;
+
+    frxReportChamados.Export(
+      frxPDFExportChamados
+    );
+
+    ShowMessage(
+      'Relatório exportado com sucesso.'
+    );
+
+  except
+    on E: Exception do
+      ShowMessage(
+        'Não foi possível exportar o relatório.' +
+        sLineBreak +
+        sLineBreak +
+        E.Message
+      );
+  end;
+end;
+
+procedure TfrmChamados.AtualizarIndicadores;
+var
+  TotalAbertos: Integer;
+  TotalAndamento: Integer;
+  TotalConcluidos: Integer;
+  TotalAtrasados: Integer;
+  Status: string;
+  DataPrevista: TDateTime;
+begin
+  TotalAbertos := 0;
+  TotalAndamento := 0;
+  TotalConcluidos := 0;
+  TotalAtrasados := 0;
+
+  if not dmChamado.qryChamados.Active then
+    Exit;
+
+  dmChamado.qryChamados.DisableControls;
+
+  try
+    dmChamado.qryChamados.First;
+
+    while not dmChamado.qryChamados.Eof do
+    begin
+      Status :=
+        dmChamado.qryChamados
+          .FieldByName('STATUS').AsString;
+
+      if SameText(Status, 'ABERTO') then
+        Inc(TotalAbertos)
+      else if SameText(Status, 'EM_ANDAMENTO') then
+        Inc(TotalAndamento)
+      else if SameText(Status, 'CONCLUIDO') then
+        Inc(TotalConcluidos);
+
+      if not dmChamado.qryChamados
+        .FieldByName('DATA_PREVISTA').IsNull then
+      begin
+        DataPrevista :=
+          dmChamado.qryChamados
+            .FieldByName('DATA_PREVISTA').AsDateTime;
+
+        if TChamadoService.EstaAtrasado(
+          DataPrevista,
+          Status
+        ) then
+          Inc(TotalAtrasados);
+      end;
+
+      dmChamado.qryChamados.Next;
+    end;
+
+    dmChamado.qryChamados.First;
+
+  finally
+    dmChamado.qryChamados.EnableControls;
+  end;
+
+  lblTotalAbertos.Caption :=
+    'Abertos: ' + IntToStr(TotalAbertos);
+
+  lblTotalAndamento.Caption :=
+    'Em andamento: ' + IntToStr(TotalAndamento);
+
+  lblTotalConcluidos.Caption :=
+    'Concluídos: ' + IntToStr(TotalConcluidos);
+
+  lblTotalAtrasados.Caption :=
+    'Em atraso: ' + IntToStr(TotalAtrasados);
+end;
 
 procedure TfrmChamados.AjustarGrid;
 var
@@ -52,19 +201,19 @@ begin
 
   L := dbgChamados.ClientWidth - 35;
 
-  dbgChamados.Columns[0].Width := Round(L * 0.06); // ID
+  dbgChamados.Columns[0].Width := Round(L * 0.06);
 
-  dbgChamados.Columns[1].Visible := False; // CLIENTE_ID
+  dbgChamados.Columns[1].Visible := False;
 
-  dbgChamados.Columns[2].Width := Round(L * 0.18); // CLIENTE
-  dbgChamados.Columns[3].Width := Round(L * 0.13); // DATA_ABERTURA
+  dbgChamados.Columns[2].Width := Round(L * 0.18);
+  dbgChamados.Columns[3].Width := Round(L * 0.13);
 
-  dbgChamados.Columns[4].Visible := False; // DATA_FECHAMENTO
+  dbgChamados.Columns[4].Visible := False;
 
-  dbgChamados.Columns[5].Width := Round(L * 0.13); // DATA_PREVISTA
-  dbgChamados.Columns[6].Width := Round(L * 0.27); // DESCRICAO
-  dbgChamados.Columns[7].Width := Round(L * 0.12); // STATUS
-  dbgChamados.Columns[8].Width := Round(L * 0.11); // VALOR_TOTAL
+  dbgChamados.Columns[5].Width := Round(L * 0.13);
+  dbgChamados.Columns[6].Width := Round(L * 0.27);
+  dbgChamados.Columns[7].Width := Round(L * 0.12);
+  dbgChamados.Columns[8].Width := Round(L * 0.11);
 
   dbgChamados.Columns[0].Title.Caption := 'ID';
   dbgChamados.Columns[2].Title.Caption := 'Cliente';
@@ -98,6 +247,8 @@ begin
     begin
       dmChamado.qryChamados.Close;
       dmChamado.qryChamados.Open;
+
+      AjustarGrid;
     end;
   finally
     frmChamadoCadastro.Free;
@@ -201,6 +352,7 @@ begin
 
     dmChamado.qryChamados.Close;
     dmChamado.qryChamados.Open;
+    AjustarGrid;
 
   except
     on E: Exception do
@@ -211,6 +363,36 @@ begin
         E.Message
       );
   end;
+end;
+
+procedure TfrmChamados.btnFiltrarClick(Sender: TObject);
+var
+  StatusFiltro: string;
+begin
+  if dtpDataInicial.Date > dtpDataFinal.Date then
+  begin
+    ShowMessage(
+      'A data inicial não pode ser maior que a data final.'
+    );
+
+    dtpDataInicial.SetFocus;
+    Exit;
+  end;
+
+  if cmbFiltroStatus.ItemIndex <= 0 then
+    StatusFiltro := ''
+  else
+    StatusFiltro := cmbFiltroStatus.Text;
+
+  dmChamado.FiltrarChamados(
+    dtpDataInicial.Date,
+    dtpDataFinal.Date,
+    StatusFiltro,
+    edtFiltroCliente.Text
+  );
+
+  AtualizarIndicadores;
+  AjustarGrid;
 end;
 
 procedure TfrmChamados.btnItensClick(Sender: TObject);
@@ -238,6 +420,29 @@ begin
 
   dmChamado.qryChamados.Close;
   dmChamado.qryChamados.Open;
+  AjustarGrid;
+end;
+
+procedure TfrmChamados.btnLimparFiltroClick(Sender: TObject);
+begin
+  dtpDataInicial.Date :=
+    StartOfTheMonth(Date);
+
+  dtpDataFinal.Date :=
+    Date;
+
+  cmbFiltroStatus.ItemIndex := 0;
+
+  edtFiltroCliente.Clear;
+
+  dmChamado.FiltrarChamados(
+    dtpDataInicial.Date,
+    dtpDataFinal.Date,
+    '',
+    ''
+  );
+
+  AjustarGrid;
 end;
 
 procedure TfrmChamados.btnNovoClick(Sender: TObject);
@@ -260,15 +465,124 @@ begin
 end;
 
 procedure TfrmChamados.btnRelatorioClick(Sender: TObject);
+var
+  StatusFiltro: string;
+  ClienteFiltro: string;
 begin
   if not dmChamado.qryChamados.Active then
-    dmChamado.qryChamados.Open;
+  begin
+    ShowMessage('Realize a pesquisa antes de gerar o relatório.');
+    Exit;
+  end;
+
+  if cmbFiltroStatus.ItemIndex <= 0 then
+    StatusFiltro := 'TODOS'
+  else
+    StatusFiltro := cmbFiltroStatus.Text;
+
+  if Trim(edtFiltroCliente.Text) = '' then
+    ClienteFiltro := 'TODOS'
+  else
+    ClienteFiltro := edtFiltroCliente.Text;
+
+  frxReportChamados.Variables['DATA_INICIAL'] :=
+    QuotedStr(
+      FormatDateTime(
+        'dd/mm/yyyy',
+        dtpDataInicial.Date
+      )
+    );
+
+  frxReportChamados.Variables['DATA_FINAL'] :=
+    QuotedStr(
+      FormatDateTime(
+        'dd/mm/yyyy',
+        dtpDataFinal.Date
+      )
+    );
+
+  frxReportChamados.Variables['STATUS_FILTRO'] :=
+    QuotedStr(StatusFiltro);
+
+  frxReportChamados.Variables['CLIENTE_FILTRO'] :=
+    QuotedStr(ClienteFiltro);
 
   frxReportChamados.ShowReport;
 end;
 
+procedure TfrmChamados.dbgChamadosDrawColumnCell(
+  Sender: TObject;
+  const Rect: TRect;
+  DataCol: Integer;
+  Column: TColumn;
+  State: TGridDrawState);
+var
+  Status: string;
+  DataPrevista: TDateTime;
+  Atrasado: Boolean;
+begin
+  Atrasado := False;
+
+  if dmChamado.qryChamados.Active and
+     (not dmChamado.qryChamados.IsEmpty) then
+  begin
+    Status :=
+      dmChamado.qryChamados
+        .FieldByName('STATUS').AsString;
+
+    if not dmChamado.qryChamados
+      .FieldByName('DATA_PREVISTA').IsNull then
+    begin
+      DataPrevista :=
+        dmChamado.qryChamados
+          .FieldByName('DATA_PREVISTA').AsDateTime;
+
+      Atrasado :=
+        TChamadoService.EstaAtrasado(
+          DataPrevista,
+          Status
+        );
+    end;
+  end;
+
+  if Atrasado and not (gdSelected in State) then
+  begin
+    dbgChamados.Canvas.Brush.Color :=
+      RGB(255, 225, 225);
+
+    dbgChamados.Canvas.Font.Color :=
+      clRed;
+  end;
+
+  dbgChamados.DefaultDrawColumnCell(
+    Rect,
+    DataCol,
+    Column,
+    State
+  );
+end;
+
 procedure TfrmChamados.FormResize(Sender: TObject);
 begin
+  AtualizarIndicadores;
+  AjustarGrid;
+end;
+
+procedure TfrmChamados.FormShow(Sender: TObject);
+begin
+  dtpDataInicial.Date := StartOfTheMonth(Date);
+  dtpDataFinal.Date := Date;
+
+  cmbFiltroStatus.ItemIndex := 0;
+
+  dmChamado.FiltrarChamados(
+    dtpDataInicial.Date,
+    dtpDataFinal.Date,
+    '',
+    ''
+  );
+
+  AtualizarIndicadores;
   AjustarGrid;
 end;
 

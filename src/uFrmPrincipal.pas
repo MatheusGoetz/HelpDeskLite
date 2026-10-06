@@ -4,13 +4,29 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, uFrmClientes, uFrmChamados;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, uFrmClientes, uFrmChamados,
+  Vcl.ExtCtrls;
 
 type
   TfrmPrincipal = class(TForm)
+    pnlHeader: TPanel;
+    lblLogo: TLabel;
+    lblHeaderDescricao: TLabel;
+    pnlConteudo: TPanel;
+    lblTitulo: TLabel;
+    lblSubtitulo: TLabel;
+    pnlClientes: TPanel;
+    Label1: TLabel;
+    Label2: TLabel;
     btnClientes: TButton;
+    pnlChamados: TPanel;
+    Label3: TLabel;
+    Label4: TLabel;
     btnChamados: TButton;
     btnSair: TButton;
+    pnlFooter: TPanel;
+    Label5: TLabel;
+    Label6: TLabel;
     procedure btnClientesClick(Sender: TObject);
     procedure btnChamadosClick(Sender: TObject);
     procedure btnSairClick(Sender: TObject);

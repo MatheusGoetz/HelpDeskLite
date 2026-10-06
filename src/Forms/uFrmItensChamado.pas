@@ -197,6 +197,8 @@ begin
       dmItemChamado.CarregarItens(FChamadoId);
     end;
 
+    AjustarGrid;
+
   finally
     frmItemChamadoCadastro.Free;
   end;

@@ -19,6 +19,8 @@ object frmItensChamado: TfrmItensChamado
     Width = 624
     Height = 41
     Align = alTop
+    Color = 3877150
+    ParentBackground = False
     TabOrder = 0
     object btnNovo: TButton
       Left = 72
