@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, uDMCliente, uDMChamado;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, uDMCliente, uDMChamado, uLogger;
 
 type
   TfrmChamadoCadastro = class(TForm)
@@ -232,13 +232,19 @@ begin
     ModalResult := mrOk;
 
   except
-    on E: Exception do
-      ShowMessage(
-        'Não foi possível salvar o chamado.' +
-        sLineBreak +
-        sLineBreak +
+  on E: Exception do
+    begin
+      TLogger.LogError(
+        'Cadastro de chamado',
         E.Message
       );
+
+      ShowMessage(
+        'Não foi possível salvar o chamado.' +
+        sLineBreak + sLineBreak +
+        E.Message
+      );
+    end;
   end;
 end;
 

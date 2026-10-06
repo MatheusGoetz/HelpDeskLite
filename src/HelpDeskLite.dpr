@@ -13,7 +13,8 @@ uses
   uDMItemChamado in 'Data\uDMItemChamado.pas' {dmItemChamado: TDataModule},
   uFrmItensChamado in 'Forms\uFrmItensChamado.pas' {frmItensChamado},
   uFrmItemChamadoCadastro in 'Forms\uFrmItemChamadoCadastro.pas' {frmItemChamadoCadastro},
-  uChamadoService in 'Services\uChamadoService.pas';
+  uChamadoService in 'Services\uChamadoService.pas',
+  uLogger in 'Services\uLogger.pas';
 
 {$R *.res}
 

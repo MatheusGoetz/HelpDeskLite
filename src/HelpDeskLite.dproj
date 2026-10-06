@@ -172,6 +172,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Services\uChamadoService.pas"/>
+        <DCCReference Include="Services\uLogger.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
