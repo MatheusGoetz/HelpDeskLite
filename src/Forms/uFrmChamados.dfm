@@ -12,6 +12,7 @@ object frmChamados: TfrmChamados
   Font.Style = []
   Position = poScreenCenter
   OnResize = FormResize
+  OnShow = FormShow
   TextHeight = 15
   object pnlTop: TPanel
     Left = 0
@@ -20,9 +21,38 @@ object frmChamados: TfrmChamados
     Height = 50
     Align = alTop
     TabOrder = 0
+    ExplicitTop = -6
+    object lblDataInicial: TLabel
+      Left = 424
+      Top = 0
+      Width = 61
+      Height = 15
+      Caption = 'Data inicial:'
+    end
+    object lblDataFinal: TLabel
+      Left = 520
+      Top = 0
+      Width = 53
+      Height = 15
+      Caption = 'Data final:'
+    end
+    object lblFiltroStatus: TLabel
+      Left = 598
+      Top = 0
+      Width = 35
+      Height = 15
+      Caption = 'Status:'
+    end
+    object lblFiltroCliente: TLabel
+      Left = 749
+      Top = 0
+      Width = 40
+      Height = 15
+      Caption = 'Cliente:'
+    end
     object btnNovo: TButton
-      Left = 40
-      Top = 13
+      Left = 8
+      Top = 19
       Width = 75
       Height = 25
       Caption = 'Novo'
@@ -30,8 +60,8 @@ object frmChamados: TfrmChamados
       OnClick = btnNovoClick
     end
     object btnEditar: TButton
-      Left = 160
-      Top = 13
+      Left = 89
+      Top = 19
       Width = 75
       Height = 25
       Caption = 'Editar'
@@ -39,8 +69,8 @@ object frmChamados: TfrmChamados
       OnClick = btnEditarClick
     end
     object btnExcluir: TButton
-      Left = 280
-      Top = 13
+      Left = 170
+      Top = 19
       Width = 75
       Height = 25
       Caption = 'Excluir'
@@ -48,12 +78,71 @@ object frmChamados: TfrmChamados
       OnClick = btnExcluirClick
     end
     object btnAtualizar: TButton
-      Left = 400
-      Top = 13
+      Left = 251
+      Top = 19
       Width = 75
       Height = 25
       Caption = 'Atualizar'
       TabOrder = 3
+    end
+    object dtpDataInicial: TDateTimePicker
+      Left = 424
+      Top = 21
+      Width = 81
+      Height = 23
+      Date = 46300.000000000000000000
+      Time = 0.869278749996738000
+      TabOrder = 4
+    end
+    object dtpDataFinal: TDateTimePicker
+      Left = 511
+      Top = 21
+      Width = 81
+      Height = 23
+      Date = 46300.000000000000000000
+      Time = 0.870191273148520900
+      TabOrder = 5
+    end
+    object cmbFiltroStatus: TComboBox
+      Left = 598
+      Top = 21
+      Width = 145
+      Height = 23
+      Style = csDropDownList
+      ItemIndex = 0
+      TabOrder = 6
+      Text = 'TODOS'
+      Items.Strings = (
+        'TODOS'
+        'ABERTO'
+        'EM_ANDAMENTO'
+        'CONCLUIDO'
+        'CANCELADO')
+    end
+    object edtFiltroCliente: TEdit
+      Left = 749
+      Top = 21
+      Width = 121
+      Height = 23
+      TabOrder = 7
+    end
+    object btnFiltrar: TButton
+      Left = 884
+      Top = 19
+      Width = 75
+      Height = 25
+      Caption = 'Filtrar'
+      TabOrder = 8
+      OnClick = btnFiltrarClick
+    end
+    object btnLimparFiltro: TButton
+      Left = 977
+      Top = 19
+      Width = 75
+      Height = 25
+      Caption = 'Limpar'
+      TabOrder = 9
+      OnClick = btnLimparFiltroClick
     end
   end
   object dbgChamados: TDBGrid
@@ -78,7 +167,7 @@ object frmChamados: TfrmChamados
     Align = alBottom
     TabOrder = 2
     object btnItens: TButton
-      Left = 40
+      Left = 8
       Top = 6
       Width = 75
       Height = 25
@@ -549,39 +638,5 @@ object frmChamados: TfrmChamados
     DataSetOptions = []
     Left = 984
     Top = 408
-    FieldDefs = <
-      item
-        FieldName = 'ID'
-      end
-      item
-        FieldName = 'CLIENTE_ID'
-      end
-      item
-        FieldName = 'CLIENTE'
-        FieldType = fftString
-        Size = 120
-      end
-      item
-        FieldName = 'DATA_ABERTURA'
-      end
-      item
-        FieldName = 'DATA_FECHAMENTO'
-      end
-      item
-        FieldName = 'DATA_PREVISTA'
-      end
-      item
-        FieldName = 'DESCRICAO'
-        FieldType = fftString
-        Size = 500
-      end
-      item
-        FieldName = 'STATUS'
-        FieldType = fftString
-        Size = 20
-      end
-      item
-        FieldName = 'VALOR_TOTAL'
-      end>
   end
 end

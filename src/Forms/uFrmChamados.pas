@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Data.DB,
   Vcl.Grids, Vcl.DBGrids, uDMConexao, uDMChamado, uFrmChamadoCadastro, uFrmItensChamado,
-  frxSmartMemo, frCoreClasses, frxClass, frxDBSet;
+  frxSmartMemo, frCoreClasses, frxClass, frxDBSet, Vcl.ComCtrls, System.DateUtils;
 
 type
   TfrmChamados = class(TForm)
@@ -21,12 +21,25 @@ type
     btnRelatorio: TButton;
     frxReportChamados: TfrxReport;
     frxDBChamados: TfrxDBDataset;
+    lblDataInicial: TLabel;
+    dtpDataInicial: TDateTimePicker;
+    lblDataFinal: TLabel;
+    dtpDataFinal: TDateTimePicker;
+    lblFiltroStatus: TLabel;
+    cmbFiltroStatus: TComboBox;
+    lblFiltroCliente: TLabel;
+    edtFiltroCliente: TEdit;
+    btnFiltrar: TButton;
+    btnLimparFiltro: TButton;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
     procedure btnItensClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure btnRelatorioClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnLimparFiltroClick(Sender: TObject);
+    procedure btnFiltrarClick(Sender: TObject);
   private
     procedure AjustarGrid;
   public
@@ -52,19 +65,19 @@ begin
 
   L := dbgChamados.ClientWidth - 35;
 
-  dbgChamados.Columns[0].Width := Round(L * 0.06); // ID
+  dbgChamados.Columns[0].Width := Round(L * 0.06);
 
-  dbgChamados.Columns[1].Visible := False; // CLIENTE_ID
+  dbgChamados.Columns[1].Visible := False;
 
-  dbgChamados.Columns[2].Width := Round(L * 0.18); // CLIENTE
-  dbgChamados.Columns[3].Width := Round(L * 0.13); // DATA_ABERTURA
+  dbgChamados.Columns[2].Width := Round(L * 0.18);
+  dbgChamados.Columns[3].Width := Round(L * 0.13);
 
-  dbgChamados.Columns[4].Visible := False; // DATA_FECHAMENTO
+  dbgChamados.Columns[4].Visible := False;
 
-  dbgChamados.Columns[5].Width := Round(L * 0.13); // DATA_PREVISTA
-  dbgChamados.Columns[6].Width := Round(L * 0.27); // DESCRICAO
-  dbgChamados.Columns[7].Width := Round(L * 0.12); // STATUS
-  dbgChamados.Columns[8].Width := Round(L * 0.11); // VALOR_TOTAL
+  dbgChamados.Columns[5].Width := Round(L * 0.13);
+  dbgChamados.Columns[6].Width := Round(L * 0.27);
+  dbgChamados.Columns[7].Width := Round(L * 0.12);
+  dbgChamados.Columns[8].Width := Round(L * 0.11);
 
   dbgChamados.Columns[0].Title.Caption := 'ID';
   dbgChamados.Columns[2].Title.Caption := 'Cliente';
@@ -98,6 +111,8 @@ begin
     begin
       dmChamado.qryChamados.Close;
       dmChamado.qryChamados.Open;
+
+      AjustarGrid;
     end;
   finally
     frmChamadoCadastro.Free;
@@ -201,6 +216,7 @@ begin
 
     dmChamado.qryChamados.Close;
     dmChamado.qryChamados.Open;
+    AjustarGrid;
 
   except
     on E: Exception do
@@ -211,6 +227,35 @@ begin
         E.Message
       );
   end;
+end;
+
+procedure TfrmChamados.btnFiltrarClick(Sender: TObject);
+var
+  StatusFiltro: string;
+begin
+  if dtpDataInicial.Date > dtpDataFinal.Date then
+  begin
+    ShowMessage(
+      'A data inicial não pode ser maior que a data final.'
+    );
+
+    dtpDataInicial.SetFocus;
+    Exit;
+  end;
+
+  if cmbFiltroStatus.ItemIndex <= 0 then
+    StatusFiltro := ''
+  else
+    StatusFiltro := cmbFiltroStatus.Text;
+
+  dmChamado.FiltrarChamados(
+    dtpDataInicial.Date,
+    dtpDataFinal.Date,
+    StatusFiltro,
+    edtFiltroCliente.Text
+  );
+
+  AjustarGrid;
 end;
 
 procedure TfrmChamados.btnItensClick(Sender: TObject);
@@ -238,6 +283,29 @@ begin
 
   dmChamado.qryChamados.Close;
   dmChamado.qryChamados.Open;
+  AjustarGrid;
+end;
+
+procedure TfrmChamados.btnLimparFiltroClick(Sender: TObject);
+begin
+  dtpDataInicial.Date :=
+    StartOfTheMonth(Date);
+
+  dtpDataFinal.Date :=
+    Date;
+
+  cmbFiltroStatus.ItemIndex := 0;
+
+  edtFiltroCliente.Clear;
+
+  dmChamado.FiltrarChamados(
+    dtpDataInicial.Date,
+    dtpDataFinal.Date,
+    '',
+    ''
+  );
+
+  AjustarGrid;
 end;
 
 procedure TfrmChamados.btnNovoClick(Sender: TObject);
@@ -269,6 +337,23 @@ end;
 
 procedure TfrmChamados.FormResize(Sender: TObject);
 begin
+  AjustarGrid;
+end;
+
+procedure TfrmChamados.FormShow(Sender: TObject);
+begin
+  dtpDataInicial.Date := StartOfTheMonth(Date);
+  dtpDataFinal.Date := Date;
+
+  cmbFiltroStatus.ItemIndex := 0;
+
+  dmChamado.FiltrarChamados(
+    dtpDataInicial.Date,
+    dtpDataFinal.Date,
+    '',
+    ''
+  );
+
   AjustarGrid;
 end;
 

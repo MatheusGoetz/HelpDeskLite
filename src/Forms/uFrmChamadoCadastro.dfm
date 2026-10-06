@@ -90,7 +90,7 @@ object frmChamadoCadastro: TfrmChamadoCadastro
   end
   object edtValorTotal: TEdit
     Left = 166
-    Top = 255
+    Top = 248
     Width = 203
     Height = 23
     ReadOnly = True
