@@ -38,14 +38,12 @@ type
     lblTotalAtrasados: TLabel;
     frxPDFExportChamados: TfrxPDFExport;
     dlgSalvarPDF: TSaveDialog;
-    btnExportarPDF: TButton;
     procedure btnNovoClick(Sender: TObject);
     procedure btnEditarClick(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
     procedure btnItensClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure btnRelatorioClick(Sender: TObject);
-    procedure btnExportarPDFClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnLimparFiltroClick(Sender: TObject);
     procedure btnFiltrarClick(Sender: TObject);
@@ -64,59 +62,6 @@ var
 implementation
 
 {$R *.dfm}
-
-procedure TfrmChamados.btnExportarPDFClick(Sender: TObject);
-begin
-  if not dmChamado.qryChamados.Active then
-  begin
-    ShowMessage('Realize uma pesquisa antes de exportar.');
-    Exit;
-  end;
-
-  if dmChamado.qryChamados.IsEmpty then
-  begin
-    ShowMessage('Não existem chamados para exportar.');
-    Exit;
-  end;
-
-  dlgSalvarPDF.FileName :=
-    'Relatorio_Chamados_' +
-    FormatDateTime('yyyymmdd_hhnnss', Now) +
-    '.pdf';
-
-  if not dlgSalvarPDF.Execute then
-    Exit;
-
-  try
-    frxPDFExportChamados.FileName :=
-      dlgSalvarPDF.FileName;
-
-    frxPDFExportChamados.ShowDialog :=
-      False;
-
-    frxPDFExportChamados.OpenAfterExport :=
-      False;
-
-    frxReportChamados.PrepareReport;
-
-    frxReportChamados.Export(
-      frxPDFExportChamados
-    );
-
-    ShowMessage(
-      'Relatório exportado com sucesso.'
-    );
-
-  except
-    on E: Exception do
-      ShowMessage(
-        'Não foi possível exportar o relatório.' +
-        sLineBreak +
-        sLineBreak +
-        E.Message
-      );
-  end;
-end;
 
 procedure TfrmChamados.AtualizarIndicadores;
 var

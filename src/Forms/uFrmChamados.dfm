@@ -240,15 +240,6 @@ object frmChamados: TfrmChamados
       TabOrder = 1
       OnClick = btnRelatorioClick
     end
-    object btnExportarPDF: TButton
-      Left = 884
-      Top = 6
-      Width = 75
-      Height = 25
-      Caption = 'Exportar PDF'
-      TabOrder = 2
-      OnClick = btnRelatorioClick
-    end
   end
   object frxReportChamados: TfrxReport
     Version = '2026.2.5'
@@ -261,7 +252,7 @@ object frmChamados: TfrmChamados
     ReportOptions.CreateDate = 46301.769471284700000000
     ReportOptions.Description.Strings = (
       'Relat'#195#179'rio de Chamados - HelpDeskLite')
-    ReportOptions.LastChange = 46301.840209733800000000
+    ReportOptions.LastChange = 46301.851876724540000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -418,6 +409,7 @@ object frmChamados: TfrmChamados
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          HAlign = haCenter
           Memo.UTF8W = (
             'ID')
           ParentFont = False
@@ -437,14 +429,14 @@ object frmChamados: TfrmChamados
           Font.Style = [fsBold]
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            'Cliente')
+            ' Cliente')
           ParentFont = False
           VAlign = vaCenter
         end
         object HdrAbertura: TfrxMemoView
           AllowVectorExport = True
           Left = 253.228510000000000000
-          Width = 124.724490000000000000
+          Width = 113.385900000000000000
           Height = 26.456710000000000000
           ContentScaleOptions.Constraints.MaxIterationValue = 0
           ContentScaleOptions.Constraints.MinIterationValue = 0
@@ -455,13 +447,13 @@ object frmChamados: TfrmChamados
           Font.Style = [fsBold]
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            'Abertura')
+            ' Abertura')
           ParentFont = False
           VAlign = vaCenter
         end
         object HdrPrevista: TfrxMemoView
           AllowVectorExport = True
-          Left = 377.953000000000000000
+          Left = 366.614410000000000000
           Width = 124.724490000000000000
           Height = 26.456710000000000000
           ContentScaleOptions.Constraints.MaxIterationValue = 0
@@ -473,14 +465,14 @@ object frmChamados: TfrmChamados
           Font.Style = [fsBold]
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            'Prevista')
+            ' Prevista')
           ParentFont = False
           VAlign = vaCenter
         end
         object HdrStatus: TfrxMemoView
           AllowVectorExport = True
-          Left = 502.677490000000000000
-          Width = 120.944960000000000000
+          Left = 491.338900000000000000
+          Width = 132.283550000000000000
           Height = 26.456710000000000000
           ContentScaleOptions.Constraints.MaxIterationValue = 0
           ContentScaleOptions.Constraints.MinIterationValue = 0
@@ -491,7 +483,7 @@ object frmChamados: TfrmChamados
           Font.Style = [fsBold]
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            'Status')
+            ' Status')
           ParentFont = False
           VAlign = vaCenter
         end
@@ -509,7 +501,7 @@ object frmChamados: TfrmChamados
           Font.Style = [fsBold]
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            'Valor Total')
+            ' Valor Total')
           ParentFont = False
           VAlign = vaCenter
         end
@@ -569,6 +561,7 @@ object frmChamados: TfrmChamados
           Font.Name = 'Arial'
           Font.Style = []
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          HAlign = haCenter
           Memo.UTF8W = (
             '[Chamados."ID"]')
           ParentFont = False
@@ -588,8 +581,9 @@ object frmChamados: TfrmChamados
           Font.Style = []
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            '[Chamados."CLIENTE"]')
+            ' [Chamados."CLIENTE"]')
           ParentFont = False
+          VAlign = vaCenter
         end
         object FldAbertura: TfrxMemoView
           AllowVectorExport = True
@@ -606,7 +600,7 @@ object frmChamados: TfrmChamados
           Font.Style = []
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            '[Chamados."DATA_ABERTURA"]')
+            ' [Chamados."DATA_ABERTURA"]')
           ParentFont = False
           VAlign = vaCenter
         end
@@ -625,7 +619,7 @@ object frmChamados: TfrmChamados
           Font.Style = []
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            '[Chamados."DATA_PREVISTA"]')
+            ' [Chamados."DATA_PREVISTA"]')
           ParentFont = False
           VAlign = vaCenter
         end
@@ -643,17 +637,18 @@ object frmChamados: TfrmChamados
           Font.Style = []
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            '[Chamados."STATUS"]')
+            ' [Chamados."STATUS"]')
           ParentFont = False
           VAlign = vaCenter
         end
         object FldValor: TfrxMemoView
           AllowVectorExport = True
           Left = 623.622083860000000000
-          Width = 279.685220000000000000
+          Width = 253.228510000000000000
           Height = 22.677180000000000000
           ContentScaleOptions.Constraints.MaxIterationValue = 0
           ContentScaleOptions.Constraints.MinIterationValue = 0
+          DisplayFormat.FormatStr = '%2.2f'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -662,7 +657,7 @@ object frmChamados: TfrmChamados
           Font.Style = []
           Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
           Memo.UTF8W = (
-            '[Chamados."VALOR_TOTAL"]')
+            ' [Chamados."VALOR_TOTAL"]')
           ParentFont = False
           VAlign = vaCenter
         end
@@ -696,9 +691,12 @@ object frmChamados: TfrmChamados
         KeepWithData = False
         object MemoQtdGrupo: TfrxMemoView
           AllowVectorExport = True
+          Left = 4.000000000000000000
           Top = 7.559060000000000000
           Width = 347.716760000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -10
@@ -737,9 +735,12 @@ object frmChamados: TfrmChamados
         Width = 755.906000000000000000
         object MemoResumoTitulo: TfrxMemoView
           AllowVectorExport = True
+          Left = 3.000000000000000000
           Top = 3.779530000000000000
-          Width = 1046.929810000000000000
+          Width = 1024.252630000000000000
           Height = 18.897650000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -12
@@ -752,9 +753,12 @@ object frmChamados: TfrmChamados
         end
         object MemoQtd: TfrxMemoView
           AllowVectorExport = True
+          Left = 3.000000000000000000
           Top = 26.456710000000000000
-          Width = 347.716760000000000000
+          Width = 325.039580000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -771,6 +775,8 @@ object frmChamados: TfrmChamados
           Top = 26.456710000000000000
           Width = 461.103040000000000000
           Height = 22.677180000000000000
+          ContentScaleOptions.Constraints.MaxIterationValue = 0
+          ContentScaleOptions.Constraints.MinIterationValue = 0
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
