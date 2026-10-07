@@ -1,7 +1,8 @@
 object dmChamado: TdmChamado
   OnCreate = DataModuleCreate
-  Height = 480
-  Width = 640
+  Height = 600
+  Width = 800
+  PixelsPerInch = 120
   object qryChamados: TFDQuery
     Connection = dmConexao.FDConnection
     SQL.Strings = (
@@ -19,8 +20,8 @@ object dmChamado: TdmChamado
       'INNER JOIN CLIENTE CL'
       '    ON CL.ID = C.CLIENTE_ID'
       'ORDER BY C.ID DESC')
-    Left = 96
-    Top = 200
+    Left = 120
+    Top = 250
   end
   object qryChamado: TFDQuery
     Connection = dmConexao.FDConnection
@@ -36,8 +37,8 @@ object dmChamado: TdmChamado
       '    VALOR_TOTAL'
       'FROM CHAMADO'
       'WHERE ID = :ID')
-    Left = 96
-    Top = 264
+    Left = 120
+    Top = 330
     ParamData = <
       item
         Name = 'ID'
@@ -47,12 +48,12 @@ object dmChamado: TdmChamado
   end
   object qryChamadoCRUD: TFDQuery
     Connection = dmConexao.FDConnection
-    Left = 96
-    Top = 336
+    Left = 120
+    Top = 420
   end
   object dsChamados: TDataSource
     DataSet = qryChamados
-    Left = 240
-    Top = 200
+    Left = 300
+    Top = 250
   end
 end

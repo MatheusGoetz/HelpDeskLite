@@ -22,6 +22,7 @@ object frmPrincipal: TfrmPrincipal
     Color = 3877150
     ParentBackground = False
     TabOrder = 0
+    ExplicitWidth = 1182
     DesignSize = (
       1184
       70)
@@ -60,6 +61,7 @@ object frmPrincipal: TfrmPrincipal
       Caption = 'Sair'
       TabOrder = 0
       OnClick = btnSairClick
+      ExplicitLeft = 1009
     end
   end
   object pnlConteudo: TPanel
@@ -72,8 +74,8 @@ object frmPrincipal: TfrmPrincipal
     Color = 16579320
     ParentBackground = False
     TabOrder = 1
-    ExplicitTop = 64
-    ExplicitHeight = 591
+    ExplicitWidth = 1182
+    ExplicitHeight = 553
     object lblTitulo: TLabel
       Left = 68
       Top = 27
@@ -137,8 +139,8 @@ object frmPrincipal: TfrmPrincipal
         ParentFont = False
       end
       object btnClientes: TButton
-        Left = 56
-        Top = 62
+        Left = 64
+        Top = 70
         Width = 160
         Height = 34
         Caption = 'Gerenciar clientes'
@@ -200,7 +202,8 @@ object frmPrincipal: TfrmPrincipal
     Color = 16381425
     ParentBackground = False
     TabOrder = 2
-    ExplicitTop = 620
+    ExplicitTop = 623
+    ExplicitWidth = 1182
     object Label5: TLabel
       Left = 56
       Top = 6

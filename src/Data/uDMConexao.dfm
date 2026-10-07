@@ -1,19 +1,21 @@
 object dmConexao: TdmConexao
-  Height = 480
-  Width = 640
+  OnCreate = DataModuleCreate
+  Height = 600
+  Width = 800
+  PixelsPerInch = 120
   object FDConnection: TFDConnection
     Params.Strings = (
       'DriverID=FB'
-      'Database=D:\Projects\HelpDeskLite\database\HelpDeskLite.fdb'
       'User_Name=SYSDBA'
       'Password=masterkey'
-      'CharacterSet=UTF8')
+      'CharacterSet=UTF8'
+      '')
     LoginPrompt = False
-    Left = 232
-    Top = 104
+    Left = 290
+    Top = 130
   end
   object FDPhysFBDriverLink: TFDPhysFBDriverLink
-    Left = 344
-    Top = 104
+    Left = 430
+    Top = 130
   end
 end
